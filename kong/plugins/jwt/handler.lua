@@ -32,6 +32,16 @@ local function retrieve_token(conf)
     end
   end
 
+  local body, err = kong.request.get_body()
+  if err then
+    body = {}
+  end
+  for _, v in ipairs(conf.uri_param_names) do
+    if body[v] then
+      return body[v]
+    end
+  end
+
   local var = ngx.var
   for _, v in ipairs(conf.cookie_names) do
     local cookie = var["cookie_" .. v]
